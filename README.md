@@ -42,7 +42,7 @@ A research platform for studying the effect of **real-time feedback** on childre
 ### 1. Clone and install
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/sami-rehman/memory-game.git
 cd memory-game
 npm install
 ```
@@ -141,16 +141,6 @@ Access at `/admin`; credentials are from `REACT_APP_ADMIN_USER` and `REACT_APP_A
 3. Add a **Web app** and copy the config object.
 4. In `src/firebase/config.ts`, replace the placeholder (or existing) `firebaseConfig` with your values.
 
-When the config is valid (e.g. `apiKey !== "YOUR_API_KEY"`), the app switches from mock to Firestore automatically.
-
-### Collections
-
-| Collection | Purpose |
-|------------|---------|
-| `students/{studentId}` | Student profiles and group assignment |
-| `submissions/{autoId}` | Per-question response data |
-| `surveys/{autoId}` | Post-game survey responses |
-
 ---
 
 ## 📦 Data Captured
@@ -198,7 +188,3 @@ Copy is centralized in `src/config/gameContent.ts`.
 | `npm test` | Run tests |
 
 ---
-
-## 📄 License
-
-Private / research use. Adjust as needed for your institution.
