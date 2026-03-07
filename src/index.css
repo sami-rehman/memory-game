@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation delay utility for staggered fade-in (e.g. fu 0.07s, 0.14s, ...) */
+@layer utilities {
+  .animate-fu-delay-0 { animation-delay: 0s; }
+  .animate-fu-delay-1 { animation-delay: 0.07s; }
+  .animate-fu-delay-2 { animation-delay: 0.14s; }
+  .animate-fu-delay-3 { animation-delay: 0.21s; }
+  .animate-fu-delay-4 { animation-delay: 0.28s; }
+  .animate-fu-delay-5 { animation-delay: 0.35s; }
+  .animate-fu-delay-6 { animation-delay: 0.42s; }
+  .animate-fu-delay-7 { animation-delay: 0.49s; }
+  .animate-fu-delay-8 { animation-delay: 0.56s; }
+  .animate-fu-delay-9 { animation-delay: 0.63s; }
+}
