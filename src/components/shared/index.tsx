@@ -31,21 +31,23 @@ interface ImgProps {
   style?: React.CSSProperties;
   className?: string;
   objectFit?: "cover" | "contain";
+  /** When true, width is 100% with maxWidth: size for responsive layouts */
+  fluid?: boolean;
 }
 
-export function Img({ item, size = 100, label = true, style = {}, className = "", objectFit = "cover" }: ImgProps) {
+export function Img({ item, size = 100, label = true, style = {}, className = "", objectFit = "cover", fluid = false }: ImgProps) {
   const [err, setErr] = useState(false);
   const bgColor = bgColors[item.name.charCodeAt(0) % bgColors.length];
 
   return (
     <div
       className={`rounded-2xl overflow-hidden bg-white shadow-md border-[3px] border-gray-200 text-center ${className}`}
-      style={{ width: size, ...style }}
+      style={fluid ? { width: "100%", maxWidth: size, minWidth: 0, ...style } : { width: size, ...style }}
     >
       <div
         className="w-full flex items-center justify-center overflow-hidden"
         style={{
-          height: size * 0.8,
+          ...(fluid ? { aspectRatio: "1 / 0.8" } : { height: size * 0.8 }),
           background: err ? bgColor : "#F8FAFC",
         }}
       >

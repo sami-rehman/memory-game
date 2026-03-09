@@ -50,10 +50,21 @@ export const updateStudentStatusInFirestore = async (
   await setDoc(doc(db!, "students", id), { status }, { merge: true });
 };
 
+/** Delete one student and all their submissions and surveys (full cleanup). */
 export const removeStudentFromFirestore = async (
   id: string
 ): Promise<void> => {
-  await deleteDoc(doc(db!, "students", id));
+  const batch = writeBatch(db!);
+  const subSnap = await getDocs(
+    query(submissionsRef(), where("studentId", "==", id))
+  );
+  subSnap.docs.forEach((d) => batch.delete(d.ref));
+  const surveySnap = await getDocs(
+    query(surveysRef(), where("studentId", "==", id))
+  );
+  surveySnap.docs.forEach((d) => batch.delete(d.ref));
+  batch.delete(doc(db!, "students", id));
+  await batch.commit();
 };
 
 export const bulkAddStudentsToFirestore = async (

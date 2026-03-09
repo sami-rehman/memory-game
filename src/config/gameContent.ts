@@ -48,15 +48,15 @@ export const CATEGORIES: Record<string, Category> = {
       { id: "g7", name: "Pakistan", emoji: "🇵🇰", img: "https://flagcdn.com/w320/pk.png" },
       { id: "g8", name: "Egypt", emoji: "🇪🇬", img: "https://flagcdn.com/w320/eg.png" },
       { id: "g9", name: "Germany", emoji: "🇩🇪", img: "https://flagcdn.com/w320/de.png" },
-      { id: "g10", name: "Greece  ", emoji: "🇬🇷", img: "https://flagcdn.com/w320/gr.png" },
+      { id: "g10", name: "Greece", emoji: "🇬🇷", img: "https://flagcdn.com/w320/gr.png" },
     ],
   },
 };
 
 export const ROUNDS: RoundConfig[] = [
-  { round: 1, label: "Round 1", category: "animals", imageCount: 4, questionCount: 4, memTime: 15, qTime: 15, tagline: "Can you remember these animals?", diff: "Warm Up" },
-  { round: 2, label: "Round 2", category: "fruits", imageCount: 6, questionCount: 6, memTime: 20, qTime: 12, tagline: "Time for fruits and veggies!", diff: "Getting Harder" },
-  { round: 3, label: "Round 3", category: "flags", imageCount: 6, questionCount: 6, memTime: 20, qTime: 10, tagline: "Do you know these flags?", diff: "Expert" },
+  { round: 1, label: "Round 1", category: "animals", imageCount: 4, questionCount: 4, memTime: 8, qTime: 5, tagline: "Can you remember these animals?", diff: "Warm Up" },
+  { round: 2, label: "Round 2", category: "fruits", imageCount: 6, questionCount: 6, memTime: 12, qTime: 6, tagline: "Time for fruits and veggies!", diff: "Getting Harder" },
+  { round: 3, label: "Round 3", category: "flags", imageCount: 6, questionCount: 6, memTime: 10, qTime: 6, tagline: "Do you know these flags?", diff: "Expert" },
 ];
 
 /** Kid-friendly feedback: simple words, encouraging, easy to understand and read aloud (TTS). */

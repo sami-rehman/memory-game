@@ -104,38 +104,43 @@ function RoundIntro({ rc, ri, total, onGo }: { rc: RoundConfig; ri: number; tota
   const icons = ["🐾", "🥕", "🌍"];
   const curiosityLine = ROUND_CURIOSITY[rc.round] ?? CURIOSITY_HOOKS[ri % CURIOSITY_HOOKS.length];
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: bgs[ri % 4], color: P.w, textAlign: "center", padding: 20, fontFamily: ff }}>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center text-center text-white px-4 py-6 sm:p-5" style={{ background: bgs[ri % 4], fontFamily: ff }}>
       <link href={FONT_URL} rel="stylesheet" /><GlobalStyles />
-      <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 3, opacity: .7 }}>{rc.diff} • {ri + 1}/{total}</div>
-      <div style={{ fontSize: 60, margin: "12px 0" }}>{icons[ri % 4]}</div>
-      <h1 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 6px" }}>{rc.label}</h1>
-      <p style={{ fontSize: 17, opacity: .9, margin: "0 0 8px" }}>{rc.tagline}</p>
-      <p style={{ fontSize: 15, opacity: .95, margin: "0 0 4px", fontStyle: "italic" }}>{curiosityLine}</p>
-      <div style={{ display: "flex", gap: 14, marginBottom: 28, fontSize: 13, fontWeight: 600, opacity: .8, flexWrap: "wrap", justifyContent: "center" }}>
+      <div className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest opacity-70">{rc.diff} • {ri + 1}/{total}</div>
+      <div className="text-5xl sm:text-[60px] my-2 sm:my-3">{icons[ri % 4]}</div>
+      <h1 className="text-xl sm:text-[28px] font-extrabold m-0 mb-1">{rc.label}</h1>
+      <p className="text-sm sm:text-[17px] opacity-90 m-0 mb-1">{rc.tagline}</p>
+      <p className="text-xs sm:text-[15px] opacity-95 m-0 mb-1 italic">{curiosityLine}</p>
+      <div className="flex gap-3 sm:gap-4 mb-6 sm:mb-7 text-xs sm:text-[13px] font-semibold opacity-80 flex-wrap justify-center">
         <span>📸 {rc.imageCount}</span><span>⏱️ {rc.memTime}s</span><span>❓ {rc.questionCount}</span>
       </div>
-      <div style={{ width: 100, height: 100, borderRadius: "50%", background: "rgba(255,255,255,.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52, fontWeight: 900, animation: "bn .8s ease infinite" }}>{n > 0 ? n : "GO!"}</div>
+      <div className="w-16 h-16 sm:w-[100px] sm:h-[100px] rounded-full bg-white/20 flex items-center justify-center text-4xl sm:text-[52px] font-black animate-bounce">{n > 0 ? n : "GO!"}</div>
     </div>
   );
 }
 
 function MemPhase({ items, dur, label, onDone }: { items: any[]; dur: number; label: string; onDone: (ms: number) => void }) {
   const [on, setOn] = useState(true); const st = useRef(Date.now());
+  const size = items.length <= 4 ? 225 : 175;
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(170deg,#1E293B,#0F172A)", color: P.w, padding: "22px 14px", fontFamily: ff }}>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center font-game text-white px-3 py-4 sm:px-4 sm:py-6" style={{ background: "linear-gradient(170deg,#1E293B,#0F172A)", fontFamily: ff }}>
       <link href={FONT_URL} rel="stylesheet" /><GlobalStyles />
-      <div style={{ fontSize: 11, fontWeight: 700, opacity: .5, textTransform: "uppercase", letterSpacing: 2 }}>{label}</div>
-      <h2 style={{ fontSize: 22, fontWeight: 800, margin: "4px 0 4px" }}>👀 Look carefully!</h2>
-      <p style={{ fontSize: 13, opacity: .5, margin: "0 0 14px" }}>Remember every picture!</p>
-      <div style={{ width: "100%", maxWidth: 480, marginBottom: 22, paddingTop: 4 }}>
+      <div className="text-[10px] sm:text-[11px] font-bold opacity-50 uppercase tracking-wider">{label}</div>
+      <h2 className="text-lg sm:text-[22px] font-extrabold mt-1 mb-0.5">👀 Look carefully!</h2>
+      <p className="text-xs sm:text-[13px] opacity-50 mb-2 sm:mb-3">Remember every picture!</p>
+      <div className="w-full max-w-[480px] mb-3 sm:mb-5 pt-1">
         {DISABLE_TIMERS ? (
           <Btn onClick={() => { setOn(false); onDone(Date.now() - st.current); }} c="#8B5CF6" sm>Continue →</Btn>
         ) : (
           <TimerBar dur={dur} onEnd={() => { setOn(false); onDone(Date.now() - st.current); }} on={on} color="#8B5CF6" />
         )}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: items.length <= 4 ? "repeat(2,1fr)" : "repeat(3,1fr)", gap: 12, maxWidth: 480, width: "100%", justifyItems: "center" }}>
-        {items.map((item: any, i: number) => <div key={item.id} style={{ animation: `fu .4s ease ${i * .07}s both` }}><Img item={item} size={items.length <= 4 ? 225 : 175} /></div>)}
+      <div className="grid w-full max-w-[480px] justify-items-center gap-2 sm:gap-3 grid-cols-2 min-w-0" style={{ gridTemplateColumns: items.length <= 4 ? "repeat(2, 1fr)" : "repeat(3, 1fr)" }}>
+        {items.map((item: any, i: number) => (
+          <div key={item.id} className="w-full min-w-0 flex justify-center animate-fu" style={{ animationDelay: `${i * 70}ms` }}>
+            <Img item={item} size={size} fluid />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -145,11 +150,11 @@ function Dist({ onDone }: { onDone: () => void }) {
   const [n, setN] = useState(3);
   useEffect(() => { if (n <= 0) { onDone(); return; } const t = setTimeout(() => setN(n - 1), 1000); return () => clearTimeout(t); }, [n]);
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#4F46E5,#7C3AED)", color: P.w, textAlign: "center", padding: 20, fontFamily: ff }}>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center text-center text-white px-4 py-6 sm:p-5" style={{ background: "linear-gradient(135deg,#4F46E5,#7C3AED)", fontFamily: ff }}>
       <link href={FONT_URL} rel="stylesheet" /><GlobalStyles />
-      <div style={{ fontSize: 72, marginBottom: 12, animation: "wob 2s infinite" }}>🤔</div>
-      <h2 style={{ fontSize: 26, fontWeight: 800 }}>Get Ready!</h2>
-      <p style={{ fontSize: 18, opacity: .85, marginTop: 6 }}>Questions in <strong>{n > 0 ? n : "..."}</strong></p>
+      <div className="text-6xl sm:text-[72px] mb-3 sm:mb-4 animate-pulse">🤔</div>
+      <h2 className="text-xl sm:text-[26px] font-extrabold">Get Ready!</h2>
+      <p className="text-base sm:text-[18px] opacity-85 mt-2">Questions in <strong>{n > 0 ? n : "..."}</strong></p>
     </div>
   );
 }
@@ -183,52 +188,55 @@ function Quiz({ q, qi, tot, time, group, onAns }: { q: Question; qi: number; tot
   const obd = (o: any) => { if (!done) return "3px solid #E5E7EB"; if (o.id === q.correct.id) return `3px solid ${P.green}`; if (sel?.id === o.id && !ok) return `3px solid ${P.red}`; return "3px solid #E5E7EB"; };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-[linear-gradient(170deg,#1E293B,#0F172A)] text-white px-3 py-[18px] font-game">
+    <div className="min-h-screen w-full bg-[linear-gradient(170deg,#1E293B,#0F172A)]">
       <link href={FONT_URL} rel="stylesheet" /><GlobalStyles />
-      <div className="flex gap-[5px] mb-1">
+      <div className="flex flex-col items-center text-white px-3 py-4 sm:py-[18px] font-game w-full max-w-[480px] mx-auto box-border">
+      <div className="flex gap-1 sm:gap-[5px] mb-1 flex-shrink-0">
         {Array.from({ length: tot }).map((_, i) => (
           <div
             key={i}
-            className="w-7 h-1.5 rounded-full shrink-0"
+            className="w-5 h-1 sm:w-7 sm:h-1.5 rounded-full shrink-0"
             style={{ background: i < qi ? P.purple : i === qi ? "#F59E0B" : "rgba(255,255,255,.15)" }}
           />
         ))}
       </div>
-      <div className="text-xs font-bold opacity-50 mb-1">Q{qi + 1}/{tot}</div>
+      <div className="text-[11px] sm:text-xs font-bold opacity-50 mb-0.5 sm:mb-1">Q{qi + 1}/{tot}</div>
       {!DISABLE_TIMERS && (
-        <div className="w-full max-w-[480px] mb-[18px] pt-1"><TimerBar dur={time} onEnd={tout} on={on} color="#F59E0B" /></div>
+        <div className="w-full mb-3 sm:mb-[18px] pt-0.5 sm:pt-1"><TimerBar dur={time} onEnd={tout} on={on} color="#F59E0B" /></div>
       )}
-      <h2 className="text-xl font-extrabold text-center mb-4 m-0">{q.qText}</h2>
-      <div className="grid grid-cols-2 gap-2.5 max-w-[420px] w-full">
+      <h2 className="text-base sm:text-xl font-extrabold text-center mb-3 sm:mb-4 m-0 leading-tight">{q.qText}</h2>
+      <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5 w-full min-w-0">
         {q.opts.map((o) => (
           <button
             key={o.id}
+            type="button"
             onClick={() => pick2(o)}
             disabled={done}
-            className={`min-w-0 p-2 rounded-[18px] transition-all duration-200 flex flex-col items-center gap-0.5 ${done ? "cursor-default" : "cursor-pointer"}`}
+            className={`min-w-0 min-h-[44px] p-1.5 sm:p-2 rounded-xl sm:rounded-[18px] transition-all duration-200 flex flex-col items-center justify-center gap-0.5 touch-manipulation ${done ? "cursor-default" : "cursor-pointer active:scale-[0.98]"}`}
             style={{ background: obg(o), border: obd(o) }}
           >
-            <Img item={o} size={180} label={false} objectFit="cover" className="!border-0 !shadow-none max-w-full" style={{ maxWidth: "100%" }} />
-            <div className="text-sm font-extrabold text-slate font-game">{o.name}</div>
+            <Img item={o} size={180} fluid label={false} objectFit="cover" className="!border-0 !shadow-none w-full max-w-full" />
+            <div className="text-xs sm:text-sm font-extrabold text-slate font-game truncate w-full text-center">{o.name}</div>
           </button>
         ))}
       </div>
-      {group === "A" && done && <div className="mt-5 text-[15px] opacity-40 font-bold">Next →</div>}
+      {group === "A" && done && <div className="mt-4 sm:mt-5 text-sm sm:text-[15px] opacity-40 font-bold">Next →</div>}
       {group === "B" && fbk && (
         <div
-          className="mt-5 px-5 py-3.5 rounded-[20px] max-w-[420px] w-full text-center animate-pi"
+          className="mt-4 sm:mt-5 px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl sm:rounded-[20px] w-full text-center animate-pi"
           style={{
             background: ok ? P.greenL : to ? P.yellowL : P.redL,
             border: `3px solid ${ok ? P.green : to ? P.yellow : P.red}`,
           }}
         >
-          <div className="text-[17px] font-extrabold text-slate font-game">{fbk.t}</div>
-          <div className="text-[13px] font-semibold text-slate-light mt-0.5 font-game">{fbk.s}</div>
+          <div className="text-[15px] sm:text-[17px] font-extrabold text-slate font-game">{fbk.t}</div>
+          <div className="text-xs sm:text-[13px] font-semibold text-slate-light mt-0.5 font-game">{fbk.s}</div>
           {emotionReg && (
-            <div className="text-[12px] font-semibold text-slate mt-2 pt-2 border-t border-slate/20 font-game">{emotionReg}</div>
+            <div className="text-[11px] sm:text-[12px] font-semibold text-slate mt-2 pt-2 border-t border-slate/20 font-game">{emotionReg}</div>
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -380,13 +388,55 @@ function Admin({ onLogout }: { onLogout: () => void }) {
   const [newGrade, setNewGrade] = useState("");
   const [filter, setFilter] = useState("all");
   const [addMode, setAddMode] = useState("single");
+  const [studentSearch, setStudentSearch] = useState("");
 
   const gA = data.getGroupSubs("A"), gB = data.getGroupSubs("B");
+
+  // One row per (student, group) — same source as table so stats cards match
+  type StudentGroupRow = { studentId: string; group: "A" | "B"; status: "pending" | "playing" | "completed"; correct: number; total: number; age: number | null; grade: string | null };
+  const studentGroupRows = ((): StudentGroupRow[] => {
+    const rows: StudentGroupRow[] = [];
+    const seen = new Set<string>();
+    data.subs.forEach((s) => {
+      const key = `${s.studentId}|${s.group}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      const groupSubs = data.subs.filter((x) => x.studentId === s.studentId && x.group === s.group);
+      const completed = data.surveys.some((v) => v.studentId === s.studentId && v.group === s.group);
+      const st = data.students.find((x) => x.studentId === s.studentId);
+      rows.push({
+        studentId: s.studentId,
+        group: s.group,
+        status: completed ? "completed" : "playing",
+        correct: groupSubs.filter((x) => x.isCorrect).length,
+        total: groupSubs.length,
+        age: st?.age ?? null,
+        grade: st?.grade ?? null,
+      });
+    });
+    data.students.forEach((st) => {
+      const hasAnySubs = data.subs.some((x) => x.studentId === st.studentId);
+      if (!hasAnySubs) {
+        rows.push({
+          studentId: st.studentId,
+          group: st.group,
+          status: st.status,
+          correct: 0,
+          total: 0,
+          age: st.age ?? null,
+          grade: st.grade ?? null,
+        });
+      }
+    });
+    rows.sort((a, b) => a.studentId.localeCompare(b.studentId) || (a.group === "B" ? 1 : -1) - (b.group === "B" ? 1 : -1));
+    return rows;
+  })();
+
   const stats = {
-    total: data.students.length,
-    grpA: data.students.filter((s) => s.group === "A").length,
-    grpB: data.students.filter((s) => s.group === "B").length,
-    done: data.students.filter((s) => s.status === "completed").length,
+    total: studentGroupRows.length,
+    grpA: studentGroupRows.filter((r) => r.group === "A").length,
+    grpB: studentGroupRows.filter((r) => r.group === "B").length,
+    done: studentGroupRows.filter((r) => r.status === "completed").length,
     accA: gA.length ? Math.round((gA.filter((x) => x.isCorrect).length / gA.length) * 100) : 0,
     accB: gB.length ? Math.round((gB.filter((x) => x.isCorrect).length / gB.length) * 100) : 0,
     avgMsA: gA.length ? Math.round(gA.reduce((a, x) => a + x.responseTimeMs, 0) / gA.length) : 0,
@@ -407,9 +457,9 @@ function Admin({ onLogout }: { onLogout: () => void }) {
   });
 
   const statusData = [
-    { name: "Completed", value: data.students.filter((s) => s.status === "completed").length, color: P.green },
-    { name: "Playing", value: data.students.filter((s) => s.status === "playing").length, color: P.orange },
-    { name: "Pending", value: data.students.filter((s) => s.status === "pending").length, color: P.slateL },
+    { name: "Completed", value: studentGroupRows.filter((r) => r.status === "completed").length, color: P.green },
+    { name: "Playing", value: studentGroupRows.filter((r) => r.status === "playing").length, color: P.orange },
+    { name: "Pending", value: studentGroupRows.filter((r) => r.status === "pending").length, color: P.slateL },
   ].filter((d) => d.value > 0);
 
   const allSubs = data.subs;
@@ -443,7 +493,11 @@ function Admin({ onLogout }: { onLogout: () => void }) {
     setNewIds(""); setNewGrade("");
   };
 
-  const filteredStu = filter === "all" ? data.students : data.students.filter((s) => s.group === filter);
+  const byGroup = filter === "all" ? studentGroupRows : studentGroupRows.filter((r) => r.group === filter);
+  const searchLower = studentSearch.trim().toLowerCase();
+  const filteredStu = searchLower
+    ? byGroup.filter((r) => (r.studentId?.toLowerCase().includes(searchLower) || (r.grade ?? "").toLowerCase().includes(searchLower)))
+    : byGroup;
 
   return (
     <div className="min-h-screen bg-gray-100 font-game">
@@ -644,10 +698,13 @@ function Admin({ onLogout }: { onLogout: () => void }) {
               </div>
               <p className="text-[10px] text-slate-light mt-1.5 mb-0">🔄 Groups auto-assigned (block randomization per class)</p>
             </div>
-            <div className="flex gap-1.5 mb-3">
-              {["all", "A", "B"].map((f) => (
-                <button key={f} onClick={() => setFilter(f)} className={`py-1.5 px-3.5 rounded-[10px] border-2 text-xs font-bold cursor-pointer font-game ${filter === f ? "border-purple bg-purple-light text-purple" : "border-gray-200 bg-white text-slate-light"}`}>{f === "all" ? `All (${data.students.length})` : f === "A" ? "Group A (No Feedback)" : "Group B (With Feedback)"}</button>
-              ))}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div className="flex gap-1.5">
+                {["all", "A", "B"].map((f) => (
+                  <button key={f} onClick={() => setFilter(f)} className={`py-1.5 px-3.5 rounded-[10px] border-2 text-xs font-bold cursor-pointer font-game ${filter === f ? "border-purple bg-purple-light text-purple" : "border-gray-200 bg-white text-slate-light"}`}>{f === "all" ? `All (${studentGroupRows.length})` : f === "A" ? `Group A (No Feedback) (${studentGroupRows.filter((r) => r.group === "A").length})` : `Group B (With Feedback) (${studentGroupRows.filter((r) => r.group === "B").length})`}</button>
+                ))}
+              </div>
+              <input value={studentSearch} onChange={(e) => setStudentSearch(e.target.value)} placeholder="Search by name or class…" className="py-1.5 px-3 rounded-[10px] border-2 border-gray-200 text-xs font-game outline-none box-border min-w-[160px] max-w-[220px] placeholder:text-slate-400 ml-auto" />
             </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-xs">
@@ -655,20 +712,17 @@ function Admin({ onLogout }: { onLogout: () => void }) {
                   {["Name", "Age", "Class", "Group", "Status", "Score", ""].map((h) => <th key={h} className="py-2 px-2.5 text-left font-extrabold text-slate text-[11px]">{h}</th>)}
                 </tr></thead>
                 <tbody>
-                  {filteredStu.map((s, i) => {
-                    const ss = data.getStudentSubs(s.studentId); const ok = ss.filter((x) => x.isCorrect).length;
-                    return (
-                      <tr key={s.studentId} className={`border-b border-gray-100 ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
+                  {filteredStu.map((s, i) => (
+                      <tr key={`${s.studentId}-${s.group}`} className={`border-b border-gray-100 ${i % 2 ? "bg-[#FAFAFA]" : "bg-white"}`}>
                         <td className="py-2 px-2.5 font-bold text-purple">{s.studentId}</td>
-                        <td className="py-2 px-2.5">{s.age || "—"}</td>
-                        <td className="py-2 px-2.5">{s.grade || "—"}</td>
+                        <td className="py-2 px-2.5">{s.age ?? "—"}</td>
+                        <td className="py-2 px-2.5">{s.grade ?? "—"}</td>
                         <td className="py-2 px-2.5"><span className={`py-0.5 px-2 rounded-2xl text-[10px] font-extrabold ${s.group === "A" ? "bg-indigo-100 text-indigo-700" : "bg-pink-light text-pink"}`}>{s.group === "A" ? "Group A (No Feedback)" : "Group B (With Feedback)"}</span></td>
                         <td className="py-2 px-2.5"><span className={`py-0.5 px-2 rounded-2xl text-[10px] font-bold ${s.status === "completed" ? "bg-green-light text-green" : s.status === "playing" ? "bg-orange-light text-orange" : "bg-gray-100 text-slate-light"}`}>{s.status === "completed" ? "✅ Done" : s.status === "playing" ? "🎮 Live" : "⏳"}</span></td>
-                        <td className="py-2 px-2.5 font-bold">{ss.length ? `${ok}/${ss.length} (${Math.round((ok / ss.length) * 100)}%)` : "—"}</td>
-                        <td className="py-2 px-2.5"><button type="button" onClick={() => data.removeStudent(s.studentId)} className="bg-transparent border-none cursor-pointer text-[11px] font-bold text-red-600 hover:underline">Delete</button></td>
+                        <td className="py-2 px-2.5 font-bold">{s.total ? `${s.correct}/${s.total} (${Math.round((s.correct / s.total) * 100)}%)` : "—"}</td>
+                        <td className="py-2 px-2.5"><button type="button" onClick={async () => { try { await data.removeStudent(s.studentId); } catch (e) { window.alert("Delete failed: " + (e instanceof Error ? e.message : "Could not remove student")); } }} className="bg-transparent border-none cursor-pointer text-[11px] font-bold text-red-600 hover:underline">Delete</button></td>
                       </tr>
-                    );
-                  })}
+                    ))}
                 </tbody>
               </table>
             </div>

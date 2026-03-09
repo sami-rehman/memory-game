@@ -78,10 +78,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  // ── Remove Student ──
+  // ── Remove Student (and all their submissions + surveys) ──
   const removeStudent = useCallback(
-    (id: string): void => {
-      firebaseService.removeStudentFromFirestore(id);
+    async (id: string): Promise<void> => {
+      await firebaseService.removeStudentFromFirestore(id);
     },
     []
   );

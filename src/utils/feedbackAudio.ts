@@ -19,6 +19,7 @@ export function unlockAudio(): void {
   const ctx = getAudioContext();
   if (!ctx) return;
   if (ctx.state === "suspended") ctx.resume();
+  if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.getVoices();
 }
 
 /** Play a short tone (frequency in Hz, duration in seconds). */
@@ -52,25 +53,39 @@ export function playWrongSound(): void {
   playTone(ctx, 220, 0.3, 0.2);  // A3
 }
 
-/** Speak text for kids: slower rate, clear. Returns a Promise that resolves when all speech is done. */
+/** Prefer a female, soft-sounding voice for kid-friendly TTS (en-US). */
+function getPreferredVoice(): SpeechSynthesisVoice | null {
+  if (typeof window === "undefined" || !window.speechSynthesis) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const en = voices.filter((v) => v.lang.startsWith("en"));
+  const femaleNames = /zira|samantha|karen|aria|victoria|susan|emily|lucy|sarah|google.*english.*female|female/i;
+  const female = en.find((v) => femaleNames.test(v.name));
+  if (female) return female;
+  return en[0] || null;
+}
+
+function applySoftVoice(u: SpeechSynthesisUtterance): void {
+  u.rate = 0.88;
+  u.pitch = 1.02;
+  u.volume = 0.95;
+  u.lang = "en-US";
+  const voice = getPreferredVoice();
+  if (voice) u.voice = voice;
+}
+
+/** Speak text for kids: female voice when available, slower and softer. Returns a Promise that resolves when all speech is done. */
 export function speakFeedback(text: string, subtext?: string): Promise<void> {
   if (typeof window === "undefined" || !window.speechSynthesis) return Promise.resolve();
   window.speechSynthesis.cancel();
 
   return new Promise((resolve) => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    utterance.lang = "en-US";
+    applySoftVoice(utterance);
 
     if (subtext) {
       utterance.onend = () => {
         const u2 = new SpeechSynthesisUtterance(subtext);
-        u2.rate = 0.92;
-        u2.pitch = 1;
-        u2.volume = 1;
-        u2.lang = "en-US";
+        applySoftVoice(u2);
         u2.onend = () => resolve();
         window.speechSynthesis.speak(u2);
       };

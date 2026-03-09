@@ -25,15 +25,27 @@ export const getFeedback = (type: string, answer: string): FeedbackMessage => {
 export const generateRound = (rc: RoundConfig): RoundData => {
   const cat = CATEGORIES[rc.category];
   const shown = pickRandom(cat.items, rc.imageCount);
-  const rest = cat.items.filter((i) => !shown.find((s) => s.id === i.id));
+  const rest = cat.items.filter((i) => !shown.some((s) => s.id === i.id));
 
   const qs = shown.slice(0, rc.questionCount).map((correct) => {
     const pool = rest.length >= 3 ? rest : cat.items.filter((x) => x.id !== correct.id);
-    const distractors = pickRandom(pool, 3);
+    const distractors = pickRandom(pool, 3).filter((d) => d.id !== correct.id);
+    const uniqueOpts = [correct];
+    const seenIds = new Set<string>([correct.id]);
+    distractors.forEach((d) => {
+      if (!seenIds.has(d.id)) { seenIds.add(d.id); uniqueOpts.push(d); }
+    });
+    while (uniqueOpts.length < 4 && pool.length > 0) {
+      const extra = pool.find((p) => !seenIds.has(p.id));
+      if (!extra) break;
+      seenIds.add(extra.id);
+      uniqueOpts.push(extra);
+    }
+    const opts = shuffle(uniqueOpts);
     return {
       qText: `Which ${cat.qLabel} did you see?`,
       correct,
-      opts: shuffle([correct, ...distractors]),
+      opts,
     };
   });
 

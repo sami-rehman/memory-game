@@ -107,7 +107,7 @@ export interface DataContextType {
   addStudent: (s: Partial<Student>) => Student;
   getStudent: (id: string) => Student | undefined;
   updateStatus: (id: string, status: Student["status"]) => void;
-  removeStudent: (id: string) => void;
+  removeStudent: (id: string) => Promise<void>;
   bulkAdd: (ids: string[], grade: string | null) => Student[];
   saveStudentOnComplete: (student: Student) => void;
   addSubs: (batch: Submission[]) => void;
